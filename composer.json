@@ -1,0 +1,24 @@
+{
+    "name": "acer/xuong-oop",
+    "autoload": {
+        "psr-4": {
+            "Acer\\XuongOop\\": "src/"
+        },
+        "files": [      
+            "helper.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "you@example.com"
+        }
+    ],
+    "require": {
+        "bramus/router": "~1.6",
+        "eftec/bladeone": "^4.13",
+        "rakit/validation": "^1.4",
+        "doctrine/dbal": "^4.0",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

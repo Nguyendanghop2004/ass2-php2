@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta http-equiv="X-UA-Compatible" content="ie=edge">
+ <title>Home</title>
+ <link rel="stylesheet" href=" <?= $_ENV['BASE_URL'] ?>assets/css/style1.css ">
+ <?php /* <link rel="stylesheet" href=" <?php echo \htmlentities(asset('assets/css/style1.css')??'', ENT_QUOTES, 'UTF-8', false); ?> ">; */ ?>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+ <!-- Latest compiled JavaScript -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+ <h1 class=" mt-5 ">Welcome <?php echo \htmlentities($name??'', ENT_QUOTES, 'UTF-8', false); ?> to my website!</h1>
+
+ <?php if(isset($_SESSION['user'])): ?>
+ <a class="btn btn-primary" href="<?php echo \htmlentities(url('client/users/logout')??'', ENT_QUOTES, 'UTF-8', false); ?>">logout</a>
+ <?php endif; ?>
+
+ <?php if(!isset($_SESSION['user'])): ?>
+ <a class="btn btn-primary" href="<?php echo \htmlentities(url('client/users/login')??'', ENT_QUOTES, 'UTF-8', false); ?>">login</a>
+ <?php endif; ?>
+ <div class="row mt-5">
+ <?php if(!empty($_SESSION['cart']) || !empty($_SESSION['cart-' . $_SESSION['user']['id']])): ?>
+ <div class="col-md-12 mb-2 mt-2">
+ <table class="table table-striped">
+ <thead>
+ <tr>
+ <th>tên sản phẩm</th>
+ <th>Ảnh</th>
+ <th>Số lượng</th>
+ <th>Giá tiền</th>
+ <th>Thành tiền</th>
+ <th> xoa</th>
+ </tr>
+ </thead>
+ <tbody>
+ <?php 
+ $cart = $_SESSION['cart'] ?? $_SESSION['cart-' . $_SESSION['user']['id']];
+ ?>
+ <?php $__currentLoopData = $cart; $this->addLoop($__currentLoopData);$this->getFirstLoop();
+ foreach($__currentLoopData as $item): $loop = $this->incrementLoopIndices();  ?>
+ <tr>
+ <td> <?php echo \htmlentities($item['name']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
+ <td>
+ <img src="<?php echo \htmlentities(asset($item['img_thumbnail'])??'', ENT_QUOTES, 'UTF-8', false); ?>" alt="">
+ </td>
+ <td> <?php echo \htmlentities($item['quantity']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
+ <td> <?php echo \htmlentities($item['price_sale'] ?: $item['price_regular']??'', ENT_QUOTES, 'UTF-8', false); ?> </td>
+ <td> <?php echo \htmlentities($item['quantity'] * ($item['price_regular'] ?: $item['price_sale'])??'', ENT_QUOTES, 'UTF-8', false); ?> </td>
+ <td></td>
+ </tr>
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ </tbody>
+ </table>
+ </div>
+ <?php endif; ?>
+
+
+
+
+ </div>
+ <?php /* <div class="row">
+ <?php if(!empty($_SESSION['cart']) || !empty($_SESSION['cart-' . $_SESSION['user']['id']])): ?>
+ <div class="col-md-8 mb-2 mt-2">
+ <table class="table table-striped">
+ <thead>
+ <tr>
+ <th>Tên sản phẩm</th>
+ <th>Ảnh</th>
+ <th>Số lượng</th>
+ <th>Giá tiền</th>
+ <th>Thành tiền</th>
+ <th>Xóa</th>
+ </tr>
+ </thead>
+ <tbody>
+
+ <?php 
+ $cart = $_SESSION['cart'] ?? $_SESSION['cart-' . $_SESSION['user']['id']];
+ ?>
+ <?php $__currentLoopData = $cart; $this->addLoop($__currentLoopData);$this->getFirstLoop();
+ foreach($__currentLoopData as $item): $loop = $this->incrementLoopIndices();  ?>
+ <tr>
+ <td><?php echo \htmlentities($item['name']??'', ENT_QUOTES, 'UTF-8', false); ?></td>
+ <td>
+ <img src="<?php echo \htmlentities(asset($item['img_thumbnail'])??'', ENT_QUOTES, 'UTF-8', false); ?>" width="100px" alt="">
+ </td>
+ <td>
+ <?php 
+ $url = url('cart/quantityDec') . '?productID=' . $item['id'];
+
+ if (isset($_SESSION['cart-' . $_SESSION['user']['id']])) {
+ $url .= '&cartID=' . $_SESSION['cart_id'];
+ }
+ ?>
+ <a class="btn btn-danger" href="<?php echo \htmlentities($url??'', ENT_QUOTES, 'UTF-8', false); ?>">Giảm</a>
+
+ <?php echo \htmlentities($item['quantity']??'', ENT_QUOTES, 'UTF-8', false); ?>
+
+
+ <?php 
+ $url = url('cart/quantityInc') . '?productID=' . $item['id'];
+
+ if (isset($_SESSION['cart-' . $_SESSION['user']['id']])) {
+ $url .= '&cartID=' . $_SESSION['cart_id'];
+ }
+ ?>
+ <a class="btn btn-primary" href="<?php echo \htmlentities($url??'', ENT_QUOTES, 'UTF-8', false); ?>">Tăng</a>
+ </td>
+ <td>
+ <?php echo \htmlentities($item['price_sale'] ?: $item['price_regular']??'', ENT_QUOTES, 'UTF-8', false); ?>
+
+ </td>
+ <td>
+ <?php echo \htmlentities($item['quantity'] * ($item['price_sale'] ?: $item['price_regular'])??'', ENT_QUOTES, 'UTF-8', false); ?>
+
+ </td>
+ <td>
+ <?php 
+ $url = url('cart/remove') . '?productID=' . $item['id'];
+
+ if (isset($_SESSION['cart-' . $_SESSION['user']['id']])) {
+ $url .= '&cartID=' . $_SESSION['cart_id'];
+ }
+ ?>
+ <a onclick="return confirm('Có chắn không?')"
+ href="<?php echo \htmlentities($url??'', ENT_QUOTES, 'UTF-8', false); ?>">Xóa</a>
+ </td>
+ </tr>
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+
+ </tbody>
+ </table>
+ </div>
+
+</body> */ ?>
+
+</html>
